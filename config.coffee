@@ -13,8 +13,8 @@ exports.config =
       defaultExtension: 'styl'
       joinTo: 'stylesheets/app.css'
       order:
-        before: ['vendor/styles/normalize.css']
-        after: ['vendor/styles/helpers.css']
+        before: []
+        after: []
 
     templates:
       defaultExtension: 'hbs'
