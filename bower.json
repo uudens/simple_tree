@@ -1,0 +1,23 @@
+{
+  "name": "tree",
+  "version": "0.0.0",
+  "authors": [
+    "Karlis Bikis <karlis.bikis@gmail.com>"
+  ],
+  "description": "Simple tree",
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "backbone": "~1.1.2",
+    "lodash": "~2.4.1",
+    "jquery": "~2.1.1"
+  }
+}
