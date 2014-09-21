@@ -91,30 +91,35 @@
   globals.require.brunch = true;
 })();
 require.register("application", function(exports, require, module) {
-var Application;
+var Application, Router;
 
-Application = {
-  initialize: function() {
-    var HomeView, Router;
-    HomeView = require('views/home_view');
-    Router = require('lib/router');
-    this.homeView = new HomeView();
+Router = require('lib/router');
+
+module.exports = Application = (function() {
+
+  function Application() {
+    _.extend(this, Backbone.Events);
     this.router = new Router();
-    return typeof Object.freeze === "function" ? Object.freeze(this) : void 0;
+    this.listenTo(this.router, 'route:defaultRoute', this._buildTree);
   }
-};
 
-module.exports = Application;
+  Application.prototype._buildTree = function() {
+    return console.log('build tree');
+  };
+
+  return Application;
+
+})();
 
 });
 
 ;require.register("initialize", function(exports, require, module) {
-var application;
+var Application;
 
-application = require('application');
+Application = require('application');
 
 $(function() {
-  application.initialize();
+  new Application();
   return Backbone.history.start();
 });
 
@@ -136,11 +141,7 @@ module.exports = Router = (function(_super) {
   }
 
   Router.prototype.routes = {
-    '': 'home'
-  };
-
-  Router.prototype.home = function() {
-    return $('body').html(application.homeView.render().el);
+    '*path': 'defaultRoute'
   };
 
   return Router;

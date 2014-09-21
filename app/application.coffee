@@ -1,17 +1,12 @@
-# The application bootstrapper.
-Application =
-  initialize: ->
-    HomeView = require 'views/home_view'
-    Router = require 'lib/router'
+Router = require 'lib/router'
 
-    # Ideally, initialized classes should be kept in controllers & mediator.
-    # If you're making big webapp, here's more sophisticated skeleton
-    # https://github.com/paulmillr/brunch-with-chaplin
-    @homeView = new HomeView()
+module.exports = class Application
 
-    # Instantiate the router
+  constructor: ->
+    _.extend @, Backbone.Events
+
     @router = new Router()
-    # Freeze the object
-    Object.freeze? this
+    @listenTo @router, 'route:defaultRoute', @_buildTree
 
-module.exports = Application
+  _buildTree: ->
+    console.log 'build tree'
