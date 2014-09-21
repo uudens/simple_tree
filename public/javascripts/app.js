@@ -91,9 +91,11 @@
   globals.require.brunch = true;
 })();
 require.register("application", function(exports, require, module) {
-var Application, Router;
+var Application, Router, TreeNode;
 
 Router = require('lib/router');
+
+TreeNode = require('views/tree_node');
 
 module.exports = Application = (function() {
 
@@ -104,7 +106,58 @@ module.exports = Application = (function() {
   }
 
   Application.prototype._buildTree = function() {
-    return console.log('build tree');
+    var tree, treeData;
+    treeData = [
+      {
+        id: 'c4ca423',
+        label: 'Element #1'
+      }, {
+        id: 'f75849b',
+        label: 'Element #2'
+      }, {
+        id: '20dcc50',
+        label: 'Element #3',
+        children: [
+          {
+            id: '38a0b923',
+            label: 'Child #1 of element #3',
+            children: [
+              {
+                id: 'dcc509',
+                label: 'Subchild'
+              }, {
+                id: 'a0b9238',
+                label: 'Another subchild'
+              }
+            ]
+          }
+        ]
+      }
+    ];
+    tree = new Backbone.Model;
+    tree.set({
+      children: this._getChildCollection(treeData)
+    });
+    return new TreeNode({
+      model: tree,
+      collection: tree.get('children')
+    });
+  };
+
+  Application.prototype._getChildCollection = function(data) {
+    var child, collection, model, _i, _len;
+    collection = new Backbone.Collection;
+    for (_i = 0, _len = data.length; _i < _len; _i++) {
+      child = data[_i];
+      model = new Backbone.Model(_.omit(child, 'children'));
+      if (child.children) {
+        model.set({
+          children: this._getChildCollection(child.children)
+        });
+      }
+      collection.add(model);
+    }
+    return collection;
   };
 
   return Application;
@@ -228,6 +281,29 @@ module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partial
 
 
   return "<div id=\"content\">\n  <h1>&nbsp;</h1>\n  <h2>Welcome!</h2>\n  <ul>\n    <li><a href=\"http://brunch.readthedocs.org/\">Documentation</a></li>\n    <li><a href=\"https://github.com/brunch/brunch/issues\">Github Issues</a></li>\n    <li><a href=\"https://github.com/brunch/twitter\">Twitter Example App</a></li>\n    <li><a href=\"https://github.com/brunch/todos\">Todos Example App</a></li>\n  </ul>\n</div>\n";});
+});
+
+;require.register("views/tree_node", function(exports, require, module) {
+var TreeNode,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+module.exports = TreeNode = (function(_super) {
+
+  __extends(TreeNode, _super);
+
+  function TreeNode() {
+    return TreeNode.__super__.constructor.apply(this, arguments);
+  }
+
+  TreeNode.prototype.initialize = function() {
+    return console.log('ini');
+  };
+
+  return TreeNode;
+
+})(Marionette.CompositeView);
+
 });
 
 ;require.register("views/view", function(exports, require, module) {

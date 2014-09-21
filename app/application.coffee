@@ -1,4 +1,5 @@
 Router = require 'lib/router'
+TreeNode = require 'views/tree_node'
 
 module.exports = class Application
 
@@ -9,4 +10,40 @@ module.exports = class Application
     @listenTo @router, 'route:defaultRoute', @_buildTree
 
   _buildTree: ->
-    console.log 'build tree'
+    treeData = [
+        id: 'c4ca423'
+        label: 'Element #1'
+      ,
+        id: 'f75849b'
+        label: 'Element #2'
+      ,
+        id: '20dcc50'
+        label: 'Element #3'
+        children: [
+          id: '38a0b923'
+          label: 'Child #1 of element #3'
+          children: [
+              id: 'dcc509'
+              label: 'Subchild'
+            ,
+              id: 'a0b9238'
+              label: 'Another subchild'
+          ]
+        ]
+    ]
+
+    tree = new Backbone.Model
+    tree.set children: @_getChildCollection treeData
+
+    new TreeNode
+      model: tree
+      collection: tree.get 'children'
+
+  # Recursive
+  _getChildCollection: (data) ->
+    collection = new Backbone.Collection
+    for child in data
+      model = new Backbone.Model _.omit child, 'children'
+      model.set children: @_getChildCollection child.children if child.children
+      collection.add model
+    collection
