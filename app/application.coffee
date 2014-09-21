@@ -32,12 +32,11 @@ module.exports = class Application
         ]
     ]
 
-    tree = new Backbone.Model
+    tree = new Backbone.Model label: 'root'
     tree.set children: @_getChildCollection treeData
 
-    new TreeNode
-      model: tree
-      collection: tree.get 'children'
+    node = new TreeNode model: tree
+    $('body').append node.render().el
 
   # Recursive
   _getChildCollection: (data) ->

@@ -106,7 +106,7 @@ module.exports = Application = (function() {
   }
 
   Application.prototype._buildTree = function() {
-    var tree, treeData;
+    var node, tree, treeData;
     treeData = [
       {
         id: 'c4ca423',
@@ -134,14 +134,16 @@ module.exports = Application = (function() {
         ]
       }
     ];
-    tree = new Backbone.Model;
+    tree = new Backbone.Model({
+      label: 'root'
+    });
     tree.set({
       children: this._getChildCollection(treeData)
     });
-    return new TreeNode({
-      model: tree,
-      collection: tree.get('children')
+    node = new TreeNode({
+      model: tree
     });
+    return $('body').append(node.render().el);
   };
 
   Application.prototype._getChildCollection = function(data) {
@@ -283,10 +285,27 @@ module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partial
   return "<div id=\"content\">\n  <h1>&nbsp;</h1>\n  <h2>Welcome!</h2>\n  <ul>\n    <li><a href=\"http://brunch.readthedocs.org/\">Documentation</a></li>\n    <li><a href=\"https://github.com/brunch/brunch/issues\">Github Issues</a></li>\n    <li><a href=\"https://github.com/brunch/twitter\">Twitter Example App</a></li>\n    <li><a href=\"https://github.com/brunch/todos\">Todos Example App</a></li>\n  </ul>\n</div>\n";});
 });
 
+;require.register("views/templates/tree_node", function(exports, require, module) {
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  helpers = helpers || Handlebars.helpers;
+  var buffer = "", stack1, foundHelper, self=this, functionType="function", helperMissing=helpers.helperMissing, undef=void 0, escapeExpression=this.escapeExpression;
+
+
+  buffer += "<p class=\"label\">";
+  foundHelper = helpers.label;
+  stack1 = foundHelper || depth0.label;
+  if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
+  else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "label", { hash: {} }); }
+  buffer += escapeExpression(stack1) + "</p>\n<ul class=\"children\"></ul>\n";
+  return buffer;});
+});
+
 ;require.register("views/tree_node", function(exports, require, module) {
-var TreeNode,
+var TreeNode, template,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+template = require('./templates/tree_node');
 
 module.exports = TreeNode = (function(_super) {
 
@@ -296,8 +315,14 @@ module.exports = TreeNode = (function(_super) {
     return TreeNode.__super__.constructor.apply(this, arguments);
   }
 
+  TreeNode.prototype.template = template;
+
+  TreeNode.prototype.tagName = 'li';
+
+  TreeNode.prototype.childViewContainer = '.children';
+
   TreeNode.prototype.initialize = function() {
-    return console.log('ini');
+    return this.collection = this.model.get('children');
   };
 
   return TreeNode;
