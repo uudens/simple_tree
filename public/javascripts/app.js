@@ -138,20 +138,19 @@ module.exports = Tree = (function(_super) {
 
   Tree.prototype.localStorage = new Backbone.LocalStorage('tree');
 
-  Tree.prototype._isRecursive = true;
-
-  Tree.prototype.toJSON = function() {
-    var _ref;
-    return (_ref = this.get('children')) != null ? _ref.toJSON() : void 0;
-  };
-
   Tree.prototype.parse = function(data) {
     if (typeof data !== 'object') {
       return;
     }
-    return {
-      children: this._isRecursive ? this._getChildCollectionRecursively(data) : this._getChildCollectionIteratively(data)
-    };
+    data.isRecursive = this.get('isRecursive') != null ? this.get('isRecursive') : data.isRecursive;
+    if (data.isRecursive) {
+      console.debug('Parsing data using Recursive method');
+      data.children = this._getChildCollectionRecursively(data.children);
+    } else {
+      console.debug('Parsing data using Iterative method');
+      data.children = this._getChildCollectionIteratively(data.children);
+    }
+    return data;
   };
 
   Tree.prototype.loadDefault = function() {
@@ -160,10 +159,6 @@ module.exports = Tree = (function(_super) {
       _this.set(_this.parse(data));
       return _this.save();
     });
-  };
-
-  Tree.prototype.setIsRecursive = function(value) {
-    return this._isRecursive = !!value;
   };
 
   Tree.prototype._getChildCollectionRecursively = function(data) {
@@ -368,11 +363,13 @@ module.exports = SectionView = (function(_super) {
   SectionView.prototype.template = template;
 
   SectionView.prototype.events = {
-    'click .reset': '_reset'
+    'click .reset': '_reset',
+    'change .isRecursive': '_onParseMethodChange'
   };
 
   SectionView.prototype.ui = {
-    treeContainer: '.tree-container'
+    treeContainer: '.tree-container',
+    recursiveBox: '.isRecursive'
   };
 
   SectionView.prototype._tree = null;
@@ -381,6 +378,12 @@ module.exports = SectionView = (function(_super) {
     _.bindAll(this);
     this.listenTo(EventHub, 'node_updated node_added node_removed', this._saveTree);
     return this._loadTree();
+  };
+
+  SectionView.prototype.serializeData = function() {
+    return {
+      isRecursive: this._tree.get('isRecursive')
+    };
   };
 
   SectionView.prototype.render = function() {
@@ -413,6 +416,13 @@ module.exports = SectionView = (function(_super) {
     }
   };
 
+  SectionView.prototype._onParseMethodChange = function() {
+    this._tree.set({
+      isRecursive: this.ui.recursiveBox.is(':checked')
+    });
+    return this._saveTree();
+  };
+
   return SectionView;
 
 })(Marionette.ItemView);
@@ -422,10 +432,25 @@ module.exports = SectionView = (function(_super) {
 ;require.register("views/templates/section_view", function(exports, require, module) {
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   helpers = helpers || Handlebars.helpers;
-  var foundHelper, self=this;
+  var buffer = "", stack1, stack2, foundHelper, tmp1, self=this;
 
+function program1(depth0,data) {
+  
+  
+  return " checked";}
 
-  return "<h1>Tree</h1>\n<button class=\"reset\">Load default tree</button>\n<div class=\"tree-container\"></div>\n";});
+  buffer += "<h1>Tree</h1>\n<button class=\"reset\">Load default data</button>\n<input type=\"checkbox\" class=\"isRecursive\"";
+  foundHelper = helpers.isRecursive;
+  stack1 = foundHelper || depth0.isRecursive;
+  stack2 = helpers['if'];
+  tmp1 = self.program(1, program1, data);
+  tmp1.hash = {};
+  tmp1.fn = tmp1;
+  tmp1.inverse = self.noop;
+  stack1 = stack2.call(depth0, stack1, tmp1);
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += ">Use recursive data parsing</button>\n<div class=\"tree-container\"></div>\n";
+  return buffer;});
 });
 
 ;require.register("views/templates/tree_node_view", function(exports, require, module) {

@@ -6,25 +6,27 @@ module.exports = class Tree extends Backbone.Model
   id: 1 # Needed for localStorage
   localStorage: new Backbone.LocalStorage 'tree'
 
-  _isRecursive: true
-
-  toJSON: ->
-    @get('children')?.toJSON()
-
   parse: (data) ->
     # This method is called with request response, but
     # for localStorage response is 'true' instead of model data, so don't parse
     return if typeof data isnt 'object'
 
-    children: if @_isRecursive then @_getChildCollectionRecursively data else @_getChildCollectionIteratively data
+    # Prefer not to reload isRecursive setting, use existing setting if possible
+    data.isRecursive = if @get('isRecursive')? then @get('isRecursive') else data.isRecursive
+
+    if data.isRecursive
+      console.debug 'Parsing data using Recursive method'
+      data.children = @_getChildCollectionRecursively data.children
+    else
+      console.debug 'Parsing data using Iterative method'
+      data.children = @_getChildCollectionIteratively data.children
+
+    data
 
   loadDefault: ->
     $.getJSON 'data/tree', (data) =>
       @set @parse data
       @save()
-
-  setIsRecursive: (value) ->
-    @_isRecursive = !!value
 
   # Recursive
   _getChildCollectionRecursively: (data) ->
