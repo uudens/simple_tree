@@ -91,11 +91,11 @@
   globals.require.brunch = true;
 })();
 require.register("application", function(exports, require, module) {
-var Application, Router, TreeNode;
+var Application, Router, Section;
 
 Router = require('lib/router');
 
-TreeNode = require('views/tree_node');
+Section = require('views/section');
 
 module.exports = Application = (function() {
 
@@ -106,14 +106,20 @@ module.exports = Application = (function() {
   }
 
   Application.prototype._buildTree = function() {
-    var node, tree, treeData;
+    var recursiveTree, section, treeData;
     treeData = [
       {
         id: 'c4ca423',
         label: 'Element #1'
       }, {
         id: 'f75849b',
-        label: 'Element #2'
+        label: 'Element #2',
+        children: [
+          {
+            id: 'ryg5rd',
+            label: 'Child #1 of element #2'
+          }
+        ]
       }, {
         id: '20dcc50',
         label: 'Element #3',
@@ -134,16 +140,14 @@ module.exports = Application = (function() {
         ]
       }
     ];
-    tree = new Backbone.Model({
-      label: 'root'
-    });
-    tree.set({
+    recursiveTree = new Backbone.Model({
+      label: 'root',
       children: this._getChildCollection(treeData)
     });
-    node = new TreeNode({
-      model: tree
+    section = new Section({
+      model: recursiveTree
     });
-    return $('body').append(node.render().el);
+    return $('body').append(section.render().el);
   };
 
   Application.prototype._getChildCollection = function(data) {
@@ -249,40 +253,54 @@ module.exports = Model = (function(_super) {
 
 });
 
-;require.register("views/home_view", function(exports, require, module) {
-var HomeView, View, template,
+;require.register("views/section", function(exports, require, module) {
+var Section, TreeNode, template,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-View = require('./view');
+TreeNode = require('./tree_node');
 
-template = require('./templates/home');
+template = require('./templates/section');
 
-module.exports = HomeView = (function(_super) {
+module.exports = Section = (function(_super) {
 
-  __extends(HomeView, _super);
+  __extends(Section, _super);
 
-  function HomeView() {
-    return HomeView.__super__.constructor.apply(this, arguments);
+  function Section() {
+    return Section.__super__.constructor.apply(this, arguments);
   }
 
-  HomeView.prototype.id = 'home-view';
+  Section.prototype.tagName = 'section';
 
-  HomeView.prototype.template = template;
+  Section.prototype.template = template;
 
-  return HomeView;
+  Section.prototype.ui = {
+    treeContainer: '.tree-container'
+  };
 
-})(View);
+  Section.prototype.render = function() {
+    var node;
+    Section.__super__.render.apply(this, arguments);
+    node = new TreeNode({
+      model: this.model
+    });
+    this.ui.treeContainer.append(node.render().el);
+    return this;
+  };
+
+  return Section;
+
+})(Marionette.ItemView);
 
 });
 
-;require.register("views/templates/home", function(exports, require, module) {
+;require.register("views/templates/section", function(exports, require, module) {
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   helpers = helpers || Handlebars.helpers;
   var foundHelper, self=this;
 
 
-  return "<div id=\"content\">\n  <h1>&nbsp;</h1>\n  <h2>Welcome!</h2>\n  <ul>\n    <li><a href=\"http://brunch.readthedocs.org/\">Documentation</a></li>\n    <li><a href=\"https://github.com/brunch/brunch/issues\">Github Issues</a></li>\n    <li><a href=\"https://github.com/brunch/twitter\">Twitter Example App</a></li>\n    <li><a href=\"https://github.com/brunch/todos\">Todos Example App</a></li>\n  </ul>\n</div>\n";});
+  return "<h1>Tree</h1>\n<div class=\"tree-container\"></div>\n";});
 });
 
 ;require.register("views/templates/tree_node", function(exports, require, module) {
