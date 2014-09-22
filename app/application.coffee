@@ -1,6 +1,6 @@
 Router = require 'lib/router'
-Section = require 'views/section'
-
+SectionView = require 'views/section_view'
+TreeNode = require 'models/tree_node'
 module.exports = class Application
 
   constructor: ->
@@ -36,18 +36,20 @@ module.exports = class Application
         ]
     ]
 
-    recursiveTree = new Backbone.Model
+    recursiveTree = new TreeNode
       label: 'root'
       children: @_getChildCollection treeData
 
-    section = new Section model: recursiveTree
+    section = new SectionView model: recursiveTree
     $('body').append section.render().el
+
+    window.section = section
 
   # Recursive
   _getChildCollection: (data) ->
     collection = new Backbone.Collection
     for child in data
-      model = new Backbone.Model _.omit child, 'children'
+      model = new TreeNode _.omit child, 'children'
       model.set children: @_getChildCollection child.children if child.children
       collection.add model
     collection

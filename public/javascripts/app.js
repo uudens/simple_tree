@@ -91,11 +91,13 @@
   globals.require.brunch = true;
 })();
 require.register("application", function(exports, require, module) {
-var Application, Router, Section;
+var Application, Router, SectionView, TreeNode;
 
 Router = require('lib/router');
 
-Section = require('views/section');
+SectionView = require('views/section_view');
+
+TreeNode = require('models/tree_node');
 
 module.exports = Application = (function() {
 
@@ -140,14 +142,15 @@ module.exports = Application = (function() {
         ]
       }
     ];
-    recursiveTree = new Backbone.Model({
+    recursiveTree = new TreeNode({
       label: 'root',
       children: this._getChildCollection(treeData)
     });
-    section = new Section({
+    section = new SectionView({
       model: recursiveTree
     });
-    return $('body').append(section.render().el);
+    $('body').append(section.render().el);
+    return window.section = section;
   };
 
   Application.prototype._getChildCollection = function(data) {
@@ -155,7 +158,7 @@ module.exports = Application = (function() {
     collection = new Backbone.Collection;
     for (_i = 0, _len = data.length; _i < _len; _i++) {
       child = data[_i];
-      model = new Backbone.Model(_.omit(child, 'children'));
+      model = new TreeNode(_.omit(child, 'children'));
       if (child.children) {
         model.set({
           children: this._getChildCollection(child.children)
@@ -215,77 +218,10 @@ module.exports = Router = (function(_super) {
 
 });
 
-;require.register("views/section", function(exports, require, module) {
-var Section, TreeNode, template,
+;require.register("models/tree_node", function(exports, require, module) {
+var TreeNode,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-TreeNode = require('./tree_node');
-
-template = require('./templates/section');
-
-module.exports = Section = (function(_super) {
-
-  __extends(Section, _super);
-
-  function Section() {
-    return Section.__super__.constructor.apply(this, arguments);
-  }
-
-  Section.prototype.tagName = 'section';
-
-  Section.prototype.template = template;
-
-  Section.prototype.ui = {
-    treeContainer: '.tree-container'
-  };
-
-  Section.prototype.render = function() {
-    var node;
-    Section.__super__.render.apply(this, arguments);
-    node = new TreeNode({
-      model: this.model
-    });
-    this.ui.treeContainer.append(node.render().el);
-    return this;
-  };
-
-  return Section;
-
-})(Marionette.ItemView);
-
-});
-
-;require.register("views/templates/section", function(exports, require, module) {
-module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  helpers = helpers || Handlebars.helpers;
-  var foundHelper, self=this;
-
-
-  return "<h1>Tree</h1>\n<div class=\"tree-container\"></div>\n";});
-});
-
-;require.register("views/templates/tree_node", function(exports, require, module) {
-module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  helpers = helpers || Handlebars.helpers;
-  var buffer = "", stack1, foundHelper, self=this, functionType="function", helperMissing=helpers.helperMissing, undef=void 0, escapeExpression=this.escapeExpression;
-
-
-  buffer += "<p class=\"label\">";
-  foundHelper = helpers.label;
-  stack1 = foundHelper || depth0.label;
-  if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
-  else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "label", { hash: {} }); }
-  buffer += escapeExpression(stack1) + "</p>\n<ul class=\"children\"></ul>\n";
-  return buffer;});
-});
-
-;require.register("views/tree_node", function(exports, require, module) {
-var TreeNode, template,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-template = require('./templates/tree_node');
 
 module.exports = TreeNode = (function(_super) {
 
@@ -295,17 +231,126 @@ module.exports = TreeNode = (function(_super) {
     return TreeNode.__super__.constructor.apply(this, arguments);
   }
 
-  TreeNode.prototype.template = template;
-
-  TreeNode.prototype.tagName = 'li';
-
-  TreeNode.prototype.childViewContainer = '.children';
-
   TreeNode.prototype.initialize = function() {
-    return this.collection = this.model.get('children');
+    return console.log('init');
   };
 
   return TreeNode;
+
+})(Backbone.Model);
+
+});
+
+;require.register("views/section_view", function(exports, require, module) {
+var SectionView, TreeNodeView, template,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+TreeNodeView = require('./tree_node_view');
+
+template = require('./templates/section_view');
+
+module.exports = SectionView = (function(_super) {
+
+  __extends(SectionView, _super);
+
+  function SectionView() {
+    return SectionView.__super__.constructor.apply(this, arguments);
+  }
+
+  SectionView.prototype.tagName = 'section';
+
+  SectionView.prototype.template = template;
+
+  SectionView.prototype.ui = {
+    treeContainer: '.tree-container'
+  };
+
+  SectionView.prototype.render = function() {
+    var node;
+    SectionView.__super__.render.apply(this, arguments);
+    node = new TreeNodeView({
+      model: this.model
+    });
+    this.ui.treeContainer.append(node.render().el);
+    return this;
+  };
+
+  return SectionView;
+
+})(Marionette.ItemView);
+
+});
+
+;require.register("views/templates/section_view", function(exports, require, module) {
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  helpers = helpers || Handlebars.helpers;
+  var foundHelper, self=this;
+
+
+  return "<h1>Tree</h1>\n<div class=\"tree-container\"></div>\n";});
+});
+
+;require.register("views/templates/tree_node_view", function(exports, require, module) {
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  helpers = helpers || Handlebars.helpers;
+  var buffer = "", stack1, foundHelper, self=this, functionType="function", helperMissing=helpers.helperMissing, undef=void 0, escapeExpression=this.escapeExpression;
+
+
+  buffer += "<button class=\"delete\">Delete</button>\n<button class=\"add\">Add</button>\n<p class=\"label\">";
+  foundHelper = helpers.label;
+  stack1 = foundHelper || depth0.label;
+  if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
+  else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "label", { hash: {} }); }
+  buffer += escapeExpression(stack1) + "</p>\n<ul class=\"children\"></ul>\n";
+  return buffer;});
+});
+
+;require.register("views/tree_node_view", function(exports, require, module) {
+var TreeNode, TreeNodeView, template,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+template = require('./templates/tree_node_view');
+
+TreeNode = require('../models/tree_node');
+
+module.exports = TreeNodeView = (function(_super) {
+
+  __extends(TreeNodeView, _super);
+
+  function TreeNodeView() {
+    return TreeNodeView.__super__.constructor.apply(this, arguments);
+  }
+
+  TreeNodeView.prototype.template = template;
+
+  TreeNodeView.prototype.tagName = 'li';
+
+  TreeNodeView.prototype.childViewContainer = '.children';
+
+  TreeNodeView.prototype.events = {
+    'click .delete': '_onDeleteClick',
+    'click .add': '_onAddClick'
+  };
+
+  TreeNodeView.prototype.initialize = function() {
+    return this.collection = this.model.get('children');
+  };
+
+  TreeNodeView.prototype._onDeleteClick = function(e) {
+    e.stopPropagation();
+    return this.model.collection.remove(this.model);
+  };
+
+  TreeNodeView.prototype._onAddClick = function(e) {
+    e.stopPropagation();
+    return this.collection.add(new TreeNode({
+      label: 'New child'
+    }));
+  };
+
+  return TreeNodeView;
 
 })(Marionette.CompositeView);
 
