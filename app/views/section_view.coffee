@@ -17,33 +17,28 @@ module.exports = class SectionView extends Marionette.ItemView
 
   initialize: ->
     _.bindAll @
-    @listenTo EventHub, 'node_updated', @_onNodeUpdated
-    @_loadTree @render
+    @listenTo EventHub, 'node_updated node_added node_removed', @_saveTree
+    @_loadTree()
 
   render: ->
     super
 
     if @_tree
       @ui.treeContainer.empty()
-      node = new TreeNodeView
+      rootNode = new TreeNodeView
         model: @_tree
         eventHub: EventHub
-      @ui.treeContainer.append node.render().el
+      @ui.treeContainer.append rootNode.render().el
 
     @
 
   _reset: ->
-    @_loadDefaultTree @render
+    @_tree.loadDefault @render
 
-  _loadDefaultTree: (callback) ->
-    $.getJSON 'data/tree', (data) =>
-      @_tree = new Tree
-      @_tree.set @_tree.parse data
-      callback()
-
-  _loadTree: (callback) ->
+  _loadTree: ->
     @_tree = new Tree
-    @_tree.fetch success: callback
+    @listenTo @_tree, 'sync', @render
+    @_tree.fetch()
 
-  _onNodeUpdated: ->
-    @_tree.save()
+  _saveTree: ->
+    @_tree.save() if @_tree

@@ -138,28 +138,89 @@ module.exports = Tree = (function(_super) {
 
   Tree.prototype.localStorage = new Backbone.LocalStorage('tree');
 
+  Tree.prototype._isRecursive = true;
+
   Tree.prototype.toJSON = function() {
-    return this.get('children').toJSON();
+    var _ref;
+    return (_ref = this.get('children')) != null ? _ref.toJSON() : void 0;
   };
 
   Tree.prototype.parse = function(data) {
+    if (typeof data !== 'object') {
+      return;
+    }
     return {
-      children: this._getChildCollection(data)
+      children: this._isRecursive ? this._getChildCollectionRecursively(data) : this._getChildCollectionIteratively(data)
     };
   };
 
-  Tree.prototype._getChildCollection = function(data) {
-    var child, collection, model, _i, _len;
+  Tree.prototype.loadDefault = function() {
+    var _this = this;
+    return $.getJSON('data/tree', function(data) {
+      _this.set(_this.parse(data));
+      return _this.save();
+    });
+  };
+
+  Tree.prototype.setIsRecursive = function(value) {
+    return this._isRecursive = !!value;
+  };
+
+  Tree.prototype._getChildCollectionRecursively = function(data) {
+    var childData, collection, hasChildren, model, _i, _len;
     collection = new TreeNodes;
     for (_i = 0, _len = data.length; _i < _len; _i++) {
-      child = data[_i];
-      model = new TreeNode(_.omit(child, 'children'));
-      if (child.children) {
+      childData = data[_i];
+      model = new TreeNode(_.omit(childData, 'children'));
+      hasChildren = childData.children && childData.children.length;
+      if (hasChildren) {
         model.set({
-          children: this._getChildCollection(child.children)
+          children: this._getChildCollectionRecursively(childData.children)
         });
       }
       collection.add(model);
+    }
+    return collection;
+  };
+
+  Tree.prototype._getChildCollectionIteratively = function(data) {
+    var childData, collection, i, index, indexes, model, parentCollections, _i, _len;
+    collection = new TreeNodes;
+    parentCollections = [collection];
+    indexes = [0];
+    while (true) {
+      for (i = _i = 0, _len = indexes.length; _i < _len; i = ++_i) {
+        index = indexes[i];
+        if (!i) {
+          childData = {
+            children: data
+          };
+        }
+        childData = childData.children && childData.children[index];
+        if (!childData) {
+          indexes.pop();
+          parentCollections.pop();
+          break;
+        }
+      }
+      if (!childData) {
+        if (!indexes.length) {
+          break;
+        }
+        indexes[indexes.length - 1]++;
+        continue;
+      }
+      model = new TreeNode(_.omit(childData, 'children'));
+      _.last(parentCollections).add(model);
+      if (childData.children && childData.children.length) {
+        parentCollections.push(new TreeNodes);
+        model.set({
+          children: _.last(parentCollections)
+        });
+        indexes.push(0);
+        continue;
+      }
+      indexes[indexes.length - 1]++;
     }
     return collection;
   };
@@ -171,9 +232,11 @@ module.exports = Tree = (function(_super) {
 });
 
 ;require.register("entities/tree_node", function(exports, require, module) {
-var TreeNode,
+var TreeNode, TreeNodes,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+TreeNodes = require('./tree_nodes');
 
 module.exports = TreeNode = (function(_super) {
 
@@ -182,6 +245,23 @@ module.exports = TreeNode = (function(_super) {
   function TreeNode() {
     return TreeNode.__super__.constructor.apply(this, arguments);
   }
+
+  TreeNode.prototype.initialize = function() {
+    if (!this.id) {
+      this.set({
+        id: this._getUniqueId()
+      });
+    }
+    if (!this.get('children')) {
+      return this.set({
+        children: new TreeNodes
+      });
+    }
+  };
+
+  TreeNode.prototype._getUniqueId = function() {
+    return 'n' + (Math.random() + 1).toString(36).substring(7);
+  };
 
   return TreeNode;
 
@@ -299,46 +379,38 @@ module.exports = SectionView = (function(_super) {
 
   SectionView.prototype.initialize = function() {
     _.bindAll(this);
-    this.listenTo(EventHub, 'node_updated', this._onNodeUpdated);
-    return this._loadTree(this.render);
+    this.listenTo(EventHub, 'node_updated node_added node_removed', this._saveTree);
+    return this._loadTree();
   };
 
   SectionView.prototype.render = function() {
-    var node;
+    var rootNode;
     SectionView.__super__.render.apply(this, arguments);
     if (this._tree) {
       this.ui.treeContainer.empty();
-      node = new TreeNodeView({
+      rootNode = new TreeNodeView({
         model: this._tree,
         eventHub: EventHub
       });
-      this.ui.treeContainer.append(node.render().el);
+      this.ui.treeContainer.append(rootNode.render().el);
     }
     return this;
   };
 
   SectionView.prototype._reset = function() {
-    return this._loadDefaultTree(this.render);
+    return this._tree.loadDefault(this.render);
   };
 
-  SectionView.prototype._loadDefaultTree = function(callback) {
-    var _this = this;
-    return $.getJSON('data/tree', function(data) {
-      _this._tree = new Tree;
-      _this._tree.set(_this._tree.parse(data));
-      return callback();
-    });
-  };
-
-  SectionView.prototype._loadTree = function(callback) {
+  SectionView.prototype._loadTree = function() {
     this._tree = new Tree;
-    return this._tree.fetch({
-      success: callback
-    });
+    this.listenTo(this._tree, 'sync', this.render);
+    return this._tree.fetch();
   };
 
-  SectionView.prototype._onNodeUpdated = function() {
-    return this._tree.save();
+  SectionView.prototype._saveTree = function() {
+    if (this._tree) {
+      return this._tree.save();
+    }
   };
 
   return SectionView;
@@ -411,6 +483,7 @@ module.exports = TreeNodeView = (function(_super) {
 
   TreeNodeView.prototype.initialize = function(_arg) {
     this._eventHub = _arg.eventHub;
+    _.bindAll(this);
     return this.collection = this.model.get('children');
   };
 
@@ -422,24 +495,36 @@ module.exports = TreeNodeView = (function(_super) {
 
   TreeNodeView.prototype._edit = function() {
     this._isEditing = true;
+    $(document).on('click', this._onDocumentClickWhileEditing);
     return this.ui.label.prop('contenteditable', true).focus();
   };
 
   TreeNodeView.prototype._stopEdit = function() {
     this._isEditing = false;
-    return this.ui.label.prop('contenteditable', false);
+    $(document).off('click', this._onDocumentClickWhileEditing);
+    this.ui.label.prop('contenteditable', false);
+    this.model.set('label', this.ui.label.html());
+    return this._trigger('node_updated');
+  };
+
+  TreeNodeView.prototype._trigger = function(type) {
+    if (this._eventHub) {
+      return this._eventHub.trigger(type);
+    }
   };
 
   TreeNodeView.prototype._onDeleteClick = function(e) {
     e.stopPropagation();
-    return this.model.collection.remove(this.model);
+    this.model.collection.remove(this.model);
+    return this._trigger('node_removed');
   };
 
   TreeNodeView.prototype._onAddClick = function(e) {
     e.stopPropagation();
-    return this.collection.add(new TreeNode({
+    this.collection.add(new TreeNode({
       label: 'New child'
     }));
+    return this._trigger('node_added');
   };
 
   TreeNodeView.prototype._onLabelDoubleClick = function(e) {
@@ -454,11 +539,14 @@ module.exports = TreeNodeView = (function(_super) {
     if (!this._isEditing) {
       return;
     }
-    this._stopEdit();
-    this.model.set('label', this.ui.label.html());
-    if (this._eventHub) {
-      return this._eventHub.trigger('node_updated');
+    return this._stopEdit();
+  };
+
+  TreeNodeView.prototype._onDocumentClickWhileEditing = function(e) {
+    if (e.target === this.ui.label.get(0)) {
+      return;
     }
+    return this._stopEdit();
   };
 
   return TreeNodeView;

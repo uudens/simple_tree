@@ -19,6 +19,7 @@ module.exports = class TreeNodeView extends Marionette.CompositeView
   _isEditing: false
 
   initialize: ({ eventHub: @_eventHub }) ->
+    _.bindAll @
     @collection = @model.get 'children'
 
   childViewOptions: ->
@@ -26,13 +27,25 @@ module.exports = class TreeNodeView extends Marionette.CompositeView
 
   _edit: ->
     @_isEditing = true
+
+    $(document).on 'click', @_onDocumentClickWhileEditing
+
     @ui.label
       .prop('contenteditable', true)
       .focus()
 
   _stopEdit: ->
     @_isEditing = false
+
+    $(document).off 'click', @_onDocumentClickWhileEditing
+
     @ui.label.prop 'contenteditable', false
+
+    @model.set 'label', @ui.label.html()
+    @_trigger 'node_updated'
+
+  _trigger: (type) ->
+    @_eventHub.trigger type if @_eventHub
 
   _onDeleteClick: (e) ->
     # Stop event from bubbling up and parent handlers from firing
@@ -40,11 +53,15 @@ module.exports = class TreeNodeView extends Marionette.CompositeView
 
     @model.collection.remove @model
 
+    @_trigger 'node_removed'
+
   _onAddClick: (e) ->
     e.stopPropagation()
 
     @collection.add new TreeNode
       label: 'New child'
+
+    @_trigger 'node_added'
 
   _onLabelDoubleClick: (e) ->
     e.stopPropagation()
@@ -56,6 +73,7 @@ module.exports = class TreeNodeView extends Marionette.CompositeView
     return unless @_isEditing
 
     @_stopEdit()
-    @model.set 'label', @ui.label.html()
 
-    @_eventHub.trigger 'node_updated' if @_eventHub
+  _onDocumentClickWhileEditing: (e) ->
+    return if e.target is @ui.label.get(0)
+    @_stopEdit()
