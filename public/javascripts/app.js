@@ -91,51 +91,24 @@
   globals.require.brunch = true;
 })();
 require.register("application", function(exports, require, module) {
-var Application, Router, SectionView, Tree;
+var Application, Router, SectionView;
 
 Router = require('lib/router');
 
 SectionView = require('views/section_view');
 
-Tree = require('models/tree');
-
 module.exports = Application = (function() {
 
   function Application() {
     _.extend(this, Backbone.Events);
-    this.router = new Router();
+    this.router = new Router;
     this.listenTo(this.router, 'route:defaultRoute', this._showSection);
   }
 
-  Application.prototype._loadDefaultTree = function(callback) {
-    return $.getJSON('data/tree', function(data) {
-      var tree;
-      tree = new Tree;
-      window.tree = tree;
-      tree.set(tree.parse(data));
-      return callback();
-    });
-  };
-
-  Application.prototype._loadTree = function(callback) {
-    var tree;
-    tree = new Tree;
-    return tree.fetch({
-      success: function() {
-        window.tree = tree;
-        return callback();
-      }
-    });
-  };
-
   Application.prototype._showSection = function() {
-    return this._loadDefaultTree(function() {
-      var section;
-      section = new SectionView({
-        model: tree
-      });
-      return $('body').append(section.render().el);
-    });
+    var section;
+    section = new SectionView;
+    return $('body').append(section.render().el);
   };
 
   return Application;
@@ -258,9 +231,11 @@ module.exports = TreeNode = (function(_super) {
 });
 
 ;require.register("views/section_view", function(exports, require, module) {
-var SectionView, TreeNodeView, template,
+var SectionView, Tree, TreeNodeView, template,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Tree = require('models/tree');
 
 TreeNodeView = require('./tree_node_view');
 
@@ -278,18 +253,58 @@ module.exports = SectionView = (function(_super) {
 
   SectionView.prototype.template = template;
 
+  SectionView.prototype.events = {
+    'click .reset': '_reset'
+  };
+
   SectionView.prototype.ui = {
     treeContainer: '.tree-container'
   };
 
+  SectionView.prototype._tree = null;
+
+  SectionView.prototype.initialize = function() {
+    _.bindAll(this);
+    return this._loadTree(this.render);
+  };
+
   SectionView.prototype.render = function() {
     var node;
+    console.log('rendering');
     SectionView.__super__.render.apply(this, arguments);
-    node = new TreeNodeView({
-      model: this.model
-    });
-    this.ui.treeContainer.append(node.render().el);
+    if (this._tree) {
+      this.ui.treeContainer.empty();
+      node = new TreeNodeView({
+        model: this._tree
+      });
+      this.ui.treeContainer.append(node.render().el);
+    }
     return this;
+  };
+
+  SectionView.prototype._reset = function() {
+    return this._loadDefaultTree(this.render);
+  };
+
+  SectionView.prototype._loadDefaultTree = function(callback) {
+    var _this = this;
+    return $.getJSON('data/tree', function(data) {
+      _this._tree = new Tree;
+      _this._tree.set(_this._tree.parse(data));
+      window.tree = _this._tree;
+      return callback();
+    });
+  };
+
+  SectionView.prototype._loadTree = function(callback) {
+    var _this = this;
+    this._tree = new Tree;
+    return this._tree.fetch({
+      success: function() {
+        window.tree = _this._tree;
+        return callback();
+      }
+    });
   };
 
   return SectionView;
@@ -304,7 +319,7 @@ module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partial
   var foundHelper, self=this;
 
 
-  return "<h1>Tree</h1>\n<div class=\"tree-container\"></div>\n";});
+  return "<h1>Tree</h1>\n<button class=\"reset\">Load default tree</button>\n<div class=\"tree-container\"></div>\n";});
 });
 
 ;require.register("views/templates/tree_node_view", function(exports, require, module) {

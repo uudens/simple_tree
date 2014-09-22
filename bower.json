@@ -16,9 +16,9 @@
     "tests"
   ],
   "dependencies": {
-    "backbone": "~1.1.2",
-    "lodash": "~2.4.1",
+    "underscore": "lodash/lodash#~2.4.1",
     "jquery": "~2.1.1",
+    "backbone": "~1.1.2",
     "normalize.css": "~3.0.1",
     "marionette": "~2.2.1",
     "backbone.localStorage": "~1.1.13"
@@ -26,15 +26,20 @@
   "overrides": {
     "backbone": {
       "dependencies": {
-        "lodash": "*",
+        "underscore": "*",
         "jquery": "*"
       }
     },
     "normalize.css": {
       "main": "normalize.css"
+    },
+    "underscore": {
+      "name": "underscore",
+      "main": "dist/lodash.js"
     }
   },
   "resolutions": {
-    "backbone": "~1.1.2"
+    "backbone": "~1.1.2",
+    "underscore": "~2.4.1"
   }
 }
