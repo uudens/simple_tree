@@ -1,5 +1,5 @@
 template = require './templates/tree_node_view'
-TreeNode = require '../models/tree_node'
+TreeNode = require '../entities/tree_node'
 
 module.exports = class TreeNodeView extends Marionette.CompositeView
 
@@ -15,10 +15,14 @@ module.exports = class TreeNodeView extends Marionette.CompositeView
   ui:
     label: '.label'
 
+  _eventHub: null
   _isEditing: false
 
-  initialize: ->
+  initialize: ({ eventHub: @_eventHub }) ->
     @collection = @model.get 'children'
+
+  childViewOptions: ->
+    eventHub: @_eventHub
 
   _edit: ->
     @_isEditing = true
@@ -53,3 +57,5 @@ module.exports = class TreeNodeView extends Marionette.CompositeView
 
     @_stopEdit()
     @model.set 'label', @ui.label.html()
+
+    @_eventHub.trigger 'node_updated' if @_eventHub

@@ -117,6 +117,97 @@ module.exports = Application = (function() {
 
 });
 
+;require.register("entities/tree", function(exports, require, module) {
+var Tree, TreeNode, TreeNodes,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+TreeNode = require('./tree_node');
+
+TreeNodes = require('./tree_nodes');
+
+module.exports = Tree = (function(_super) {
+
+  __extends(Tree, _super);
+
+  function Tree() {
+    return Tree.__super__.constructor.apply(this, arguments);
+  }
+
+  Tree.prototype.id = 1;
+
+  Tree.prototype.localStorage = new Backbone.LocalStorage('tree');
+
+  Tree.prototype.toJSON = function() {
+    return this.get('children').toJSON();
+  };
+
+  Tree.prototype.parse = function(data) {
+    return {
+      children: this._getChildCollection(data)
+    };
+  };
+
+  Tree.prototype._getChildCollection = function(data) {
+    var child, collection, model, _i, _len;
+    collection = new TreeNodes;
+    for (_i = 0, _len = data.length; _i < _len; _i++) {
+      child = data[_i];
+      model = new TreeNode(_.omit(child, 'children'));
+      if (child.children) {
+        model.set({
+          children: this._getChildCollection(child.children)
+        });
+      }
+      collection.add(model);
+    }
+    return collection;
+  };
+
+  return Tree;
+
+})(Backbone.Model);
+
+});
+
+;require.register("entities/tree_node", function(exports, require, module) {
+var TreeNode,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+module.exports = TreeNode = (function(_super) {
+
+  __extends(TreeNode, _super);
+
+  function TreeNode() {
+    return TreeNode.__super__.constructor.apply(this, arguments);
+  }
+
+  return TreeNode;
+
+})(Backbone.Model);
+
+});
+
+;require.register("entities/tree_nodes", function(exports, require, module) {
+var TreeNodes,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+module.exports = TreeNodes = (function(_super) {
+
+  __extends(TreeNodes, _super);
+
+  function TreeNodes() {
+    return TreeNodes.__super__.constructor.apply(this, arguments);
+  }
+
+  return TreeNodes;
+
+})(Backbone.Collection);
+
+});
+
 ;require.register("initialize", function(exports, require, module) {
 var Application;
 
@@ -126,6 +217,17 @@ $(function() {
   new Application();
   return Backbone.history.start();
 });
+
+});
+
+;require.register("lib/event_hub", function(exports, require, module) {
+var EventHub;
+
+EventHub = {};
+
+_.extend(EventHub, Backbone.Events);
+
+module.exports = EventHub;
 
 });
 
@@ -160,84 +262,16 @@ module.exports = Router = (function(_super) {
 
 });
 
-;require.register("models/tree", function(exports, require, module) {
-var Tree, TreeNode,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-TreeNode = require('./tree_node');
-
-module.exports = Tree = (function(_super) {
-
-  __extends(Tree, _super);
-
-  function Tree() {
-    return Tree.__super__.constructor.apply(this, arguments);
-  }
-
-  Tree.prototype.id = 1;
-
-  Tree.prototype.localStorage = new Backbone.LocalStorage('tree');
-
-  Tree.prototype.toJSON = function() {
-    return this.get('children').toJSON();
-  };
-
-  Tree.prototype.parse = function(data) {
-    return {
-      children: this._getChildCollection(data)
-    };
-  };
-
-  Tree.prototype._getChildCollection = function(data) {
-    var child, collection, model, _i, _len;
-    collection = new Backbone.Collection;
-    for (_i = 0, _len = data.length; _i < _len; _i++) {
-      child = data[_i];
-      model = new TreeNode(_.omit(child, 'children'));
-      if (child.children) {
-        model.set({
-          children: this._getChildCollection(child.children)
-        });
-      }
-      collection.add(model);
-    }
-    return collection;
-  };
-
-  return Tree;
-
-})(Backbone.Model);
-
-});
-
-;require.register("models/tree_node", function(exports, require, module) {
-var TreeNode,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-module.exports = TreeNode = (function(_super) {
-
-  __extends(TreeNode, _super);
-
-  function TreeNode() {
-    return TreeNode.__super__.constructor.apply(this, arguments);
-  }
-
-  return TreeNode;
-
-})(Backbone.Model);
-
-});
-
 ;require.register("views/section_view", function(exports, require, module) {
-var SectionView, Tree, TreeNodeView, template,
+var EventHub, SectionView, Tree, TreeNodeView, template,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-Tree = require('models/tree');
+Tree = require('../entities/tree');
 
 TreeNodeView = require('./tree_node_view');
+
+EventHub = require('../lib/event_hub');
 
 template = require('./templates/section_view');
 
@@ -265,17 +299,18 @@ module.exports = SectionView = (function(_super) {
 
   SectionView.prototype.initialize = function() {
     _.bindAll(this);
+    this.listenTo(EventHub, 'node_updated', this._onNodeUpdated);
     return this._loadTree(this.render);
   };
 
   SectionView.prototype.render = function() {
     var node;
-    console.log('rendering');
     SectionView.__super__.render.apply(this, arguments);
     if (this._tree) {
       this.ui.treeContainer.empty();
       node = new TreeNodeView({
-        model: this._tree
+        model: this._tree,
+        eventHub: EventHub
       });
       this.ui.treeContainer.append(node.render().el);
     }
@@ -291,20 +326,19 @@ module.exports = SectionView = (function(_super) {
     return $.getJSON('data/tree', function(data) {
       _this._tree = new Tree;
       _this._tree.set(_this._tree.parse(data));
-      window.tree = _this._tree;
       return callback();
     });
   };
 
   SectionView.prototype._loadTree = function(callback) {
-    var _this = this;
     this._tree = new Tree;
     return this._tree.fetch({
-      success: function() {
-        window.tree = _this._tree;
-        return callback();
-      }
+      success: callback
     });
+  };
+
+  SectionView.prototype._onNodeUpdated = function() {
+    return this._tree.save();
   };
 
   return SectionView;
@@ -344,7 +378,7 @@ var TreeNode, TreeNodeView, template,
 
 template = require('./templates/tree_node_view');
 
-TreeNode = require('../models/tree_node');
+TreeNode = require('../entities/tree_node');
 
 module.exports = TreeNodeView = (function(_super) {
 
@@ -371,10 +405,19 @@ module.exports = TreeNodeView = (function(_super) {
     label: '.label'
   };
 
+  TreeNodeView.prototype._eventHub = null;
+
   TreeNodeView.prototype._isEditing = false;
 
-  TreeNodeView.prototype.initialize = function() {
+  TreeNodeView.prototype.initialize = function(_arg) {
+    this._eventHub = _arg.eventHub;
     return this.collection = this.model.get('children');
+  };
+
+  TreeNodeView.prototype.childViewOptions = function() {
+    return {
+      eventHub: this._eventHub
+    };
   };
 
   TreeNodeView.prototype._edit = function() {
@@ -412,7 +455,10 @@ module.exports = TreeNodeView = (function(_super) {
       return;
     }
     this._stopEdit();
-    return this.model.set('label', this.ui.label.html());
+    this.model.set('label', this.ui.label.html());
+    if (this._eventHub) {
+      return this._eventHub.trigger('node_updated');
+    }
   };
 
   return TreeNodeView;

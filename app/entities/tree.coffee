@@ -1,4 +1,5 @@
 TreeNode = require './tree_node'
+TreeNodes = require './tree_nodes'
 
 module.exports = class Tree extends Backbone.Model
 
@@ -13,7 +14,7 @@ module.exports = class Tree extends Backbone.Model
 
   # Recursive
   _getChildCollection: (data) ->
-    collection = new Backbone.Collection
+    collection = new TreeNodes
     for child in data
       model = new TreeNode _.omit child, 'children'
       model.set children: @_getChildCollection child.children if child.children
