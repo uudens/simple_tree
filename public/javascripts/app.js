@@ -331,11 +331,29 @@ module.exports = TreeNodeView = (function(_super) {
 
   TreeNodeView.prototype.events = {
     'click .delete': '_onDeleteClick',
-    'click .add': '_onAddClick'
+    'click .add': '_onAddClick',
+    'dblclick .label': '_onLabelDoubleClick',
+    'keydown': '_onKeyDown'
   };
+
+  TreeNodeView.prototype.ui = {
+    label: '.label'
+  };
+
+  TreeNodeView.prototype._isEditing = false;
 
   TreeNodeView.prototype.initialize = function() {
     return this.collection = this.model.get('children');
+  };
+
+  TreeNodeView.prototype._edit = function() {
+    this._isEditing = true;
+    return this.ui.label.prop('contenteditable', true).focus();
+  };
+
+  TreeNodeView.prototype._stopEdit = function() {
+    this._isEditing = false;
+    return this.ui.label.prop('contenteditable', false);
   };
 
   TreeNodeView.prototype._onDeleteClick = function(e) {
@@ -348,6 +366,22 @@ module.exports = TreeNodeView = (function(_super) {
     return this.collection.add(new TreeNode({
       label: 'New child'
     }));
+  };
+
+  TreeNodeView.prototype._onLabelDoubleClick = function(e) {
+    e.stopPropagation();
+    return this._edit();
+  };
+
+  TreeNodeView.prototype._onKeyDown = function(e) {
+    if (e.which !== 13) {
+      return;
+    }
+    if (!this._isEditing) {
+      return;
+    }
+    this._stopEdit();
+    return this.model.set('label', this.ui.label.html());
   };
 
   return TreeNodeView;
