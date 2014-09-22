@@ -107,17 +107,34 @@ module.exports = Application = (function() {
     this.listenTo(this.router, 'route:defaultRoute', this._showSection);
   }
 
-  Application.prototype._showSection = function() {
+  Application.prototype._loadDefaultTree = function(callback) {
+    return $.getJSON('data/tree', function(data) {
+      var tree;
+      tree = new Tree;
+      window.tree = tree;
+      tree.set(tree.parse(data));
+      return callback();
+    });
+  };
+
+  Application.prototype._loadTree = function(callback) {
     var tree;
     tree = new Tree;
     return tree.fetch({
       success: function() {
-        var section;
-        section = new SectionView({
-          model: tree
-        });
-        return $('body').append(section.render().el);
+        window.tree = tree;
+        return callback();
       }
+    });
+  };
+
+  Application.prototype._showSection = function() {
+    return this._loadDefaultTree(function() {
+      var section;
+      section = new SectionView({
+        model: tree
+      });
+      return $('body').append(section.render().el);
     });
   };
 
@@ -185,11 +202,16 @@ module.exports = Tree = (function(_super) {
     return Tree.__super__.constructor.apply(this, arguments);
   }
 
-  Tree.prototype.url = 'data/tree';
+  Tree.prototype.id = 1;
+
+  Tree.prototype.localStorage = new Backbone.LocalStorage('tree');
+
+  Tree.prototype.toJSON = function() {
+    return this.get('children').toJSON();
+  };
 
   Tree.prototype.parse = function(data) {
     return {
-      label: 'root',
       children: this._getChildCollection(data)
     };
   };

@@ -2,10 +2,13 @@ TreeNode = require './tree_node'
 
 module.exports = class Tree extends Backbone.Model
 
-  url: 'data/tree'
+  id: 1 # Needed for localStorage
+  localStorage: new Backbone.LocalStorage 'tree'
+
+  toJSON: ->
+    @get('children').toJSON()
 
   parse: (data) ->
-    label: 'root'
     children: @_getChildCollection data
 
   # Recursive
