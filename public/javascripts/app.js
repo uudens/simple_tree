@@ -215,44 +215,6 @@ module.exports = Router = (function(_super) {
 
 });
 
-;require.register("models/collection", function(exports, require, module) {
-var Collection,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-module.exports = Collection = (function(_super) {
-
-  __extends(Collection, _super);
-
-  function Collection() {
-    return Collection.__super__.constructor.apply(this, arguments);
-  }
-
-  return Collection;
-
-})(Backbone.Collection);
-
-});
-
-;require.register("models/model", function(exports, require, module) {
-var Model,
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-module.exports = Model = (function(_super) {
-
-  __extends(Model, _super);
-
-  function Model() {
-    return Model.__super__.constructor.apply(this, arguments);
-  }
-
-  return Model;
-
-})(Backbone.Model);
-
-});
-
 ;require.register("views/section", function(exports, require, module) {
 var Section, TreeNode, template,
   __hasProp = {}.hasOwnProperty,
