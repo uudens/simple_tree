@@ -1,37 +1,137 @@
 {
-  "isRecursive": true,
-  "children": [
-    {
-      "id": "c4ca423",
-      "label": "Element #1"
-    },
-    {
-      "id": "f75849b",
-      "label": "Element #2",
-      "children": [
-        {
-          "id": "ryg5rd",
-          "label": "Child #1 of element #2"
-        }
-      ]
-    },
-    {
-      "id": "20dcc50",
-      "label": "Element #3",
-      "children": [
-        {
-          "id": "38a0b923",
-          "label": "Child #1 of element #3",
-          "children": [{
-              "id": "dcc509",
-              "label": "Subchild"
-            }, {
-              "id": "a0b9238",
-              "label": "Another subchild"
+   "isRecursive":true,
+   "children":[
+      {
+         "id":"c4ca423",
+         "label":"Element #1",
+         "children":[
+
+         ]
+      },
+      {
+         "id":"f75849b",
+         "label":"Element #2",
+         "children":[
+            {
+               "label":"Chestnut",
+               "id":"nupgr38r529",
+               "children":[
+
+               ]
+            },
+            {
+               "label":"Paper birch",
+               "id":"nk7r6kw0o1or",
+               "children":[
+
+               ]
             }
-          ]
-        }
-      ]
-    }
-  ]
+         ]
+      },
+      {
+         "id":"20dcc50",
+         "label":"Element #3",
+         "children":[
+            {
+               "id":"38a0b923",
+               "label":"Child #1 of element #3",
+               "children":[
+                  {
+                     "id":"dcc509",
+                     "label":"Subchild",
+                     "children":[
+                        {
+                           "label":"Pi&ntilde;on pine",
+                           "id":"nxvlgbg4aemi",
+                           "children":[
+                              {
+                                 "label":"Sassafras",
+                                 "id":"n3we20ggb9",
+                                 "children":[
+                                    {
+                                       "label":"Goldenlarch",
+                                       "id":"nr1bp4x6r",
+                                       "children":[
+                                          {
+                                             "label":"Forest",
+                                             "id":"nogj3wabgldi",
+                                             "children":[
+
+                                             ]
+                                          },
+                                          {
+                                             "label":"Orange",
+                                             "id":"nza1o29e8kt9",
+                                             "children":[
+
+                                             ]
+                                          },
+                                          {
+                                             "label":"Scotch pine",
+                                             "id":"npmct17i7ldi",
+                                             "children":[
+
+                                             ]
+                                          }
+                                       ]
+                                    }
+                                 ]
+                              },
+                              {
+                                 "label":"Sycamore",
+                                 "id":"nxwrk0zoajor",
+                                 "children":[
+
+                                 ]
+                              }
+                           ]
+                        }
+                     ]
+                  },
+                  {
+                     "id":"a0b9238",
+                     "label":"Another subchild",
+                     "children":[
+
+                     ]
+                  }
+               ]
+            },
+            {
+               "label":"Butternut",
+               "id":"n8cla6kr19k9",
+               "children":[
+                  {
+                     "label":"Grapefruit",
+                     "id":"n7qj9xyctyb9",
+                     "children":[
+
+                     ]
+                  },
+                  {
+                     "label":"Maple",
+                     "id":"nyn4i5p14i",
+                     "children":[
+
+                     ]
+                  },
+                  {
+                     "label":"Cherry",
+                     "id":"ngxaq87rdx6r",
+                     "children":[
+
+                     ]
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "id":"ggcag23",
+         "label":"Element #4",
+         "children":[
+
+         ]
+      }
+   ]
 }

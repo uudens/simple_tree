@@ -429,29 +429,69 @@ th {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+html {
+  font-size: 62.5%;
+}
+body {
+  font-size: 1.8rem;
+  background-color: #d2c379;
+}
 h1 {
   margin: 0;
-  padding: 2rem;
+  padding: 4rem;
+  display: inline-block;
 }
 header {
-  background-color: #983;
   position: relative;
 }
 header .settings {
-  position: absolute;
-  right: 0;
-  top: 42%;
+  float: right;
+  display: inline-block;
+  padding: 2rem;
+  vertical-align: middle;
+}
+header .settings > * {
+  display: block;
+  margin-bottom: 0.9rem;
 }
 ul,
 li {
   list-style-type: none;
   margin: 0;
 }
+button {
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  color: #444;
+  color: rgba(0,0,0,0.8);
+  border: 0.1rem solid #999;
+  border: 0 rgba(0,0,0,0);
+  background-color: #e6e6e6;
+  text-decoration: none;
+  -webkit-border-radius: 0.2rem;
+  border-radius: 0.2rem;
+  -webkit-transition: background-color 200ms;
+  -moz-transition: background-color 200ms;
+  -o-transition: background-color 200ms;
+  -ms-transition: background-color 200ms;
+  transition: background-color 200ms;
+}
+button:hover {
+  background-color: #d9d9d9;
+}
+.itemHead {
+  padding-left: 1rem;
+}
 .itemHead > * {
   display: inline-block;
 }
 .tree-container {
+  display: inline-block;
+  white-space: nowrap;
   padding-left: 0;
+  min-width: 100%;
 }
 .tree-container > li > .children {
   padding-left: 0;
@@ -460,64 +500,64 @@ li {
   display: none;
 }
 .tree-container > li > ul > li {
-  background-color: #bfaa40;
+  background-color: #d9cc8c;
 }
 .tree-container > li > ul > li > ul > li {
-  background-color: #aabf40;
+  background-color: #ccd98c;
 }
 .tree-container > li > ul > li > ul > li > ul > li {
-  background-color: #80bf40;
+  background-color: #b3d98c;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #55bf40;
+  background-color: #99d98c;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #40bf55;
+  background-color: #8cd999;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #40bf80;
+  background-color: #8cd9b3;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #40bfaa;
+  background-color: #8cd9cc;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #40aabf;
+  background-color: #8cccd9;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #407fbf;
+  background-color: #8cb2d9;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #4055bf;
+  background-color: #8c99d9;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #5540bf;
+  background-color: #998cd9;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #7f40bf;
+  background-color: #b28cd9;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #aa40bf;
+  background-color: #cc8cd9;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #bf40aa;
+  background-color: #d98ccc;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #bf4080;
+  background-color: #d98cb3;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #bf4055;
+  background-color: #d98c99;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #bf5540;
+  background-color: #d9998c;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #bf8040;
+  background-color: #d9b38c;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #bfaa40;
+  background-color: #d9cc8c;
 }
 .tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
-  background-color: #aabf40;
+  background-color: #ccd98c;
 }
 
 

@@ -588,7 +588,9 @@ module.exports = SectionView = (function(_super) {
   SectionView.prototype._loadTree = function() {
     this._tree = new Tree;
     this.listenTo(this._tree, 'sync', this.render);
-    return this._tree.fetch();
+    return this._tree.fetch({
+      error: this._reset
+    });
   };
 
   SectionView.prototype._saveTree = function() {
@@ -625,7 +627,7 @@ function program3(depth0,data) {
   
   return " checked";}
 
-  buffer += "<header>\n	<h1>Tree</h1>\n	<div class=\"settings\">\n		<button class=\"reset\">Load default data</button>\n		<input type=\"radio\" name=\"isRecursive\" value=\"true\"";
+  buffer += "<header>\n	<h1>Tree</h1>\n	<div class=\"settings\">\n		<label>\n			<input type=\"radio\" name=\"isRecursive\" value=\"true\"";
   foundHelper = helpers.isRecursive;
   stack1 = foundHelper || depth0.isRecursive;
   stack2 = helpers['if'];
@@ -635,7 +637,7 @@ function program3(depth0,data) {
   tmp1.inverse = self.noop;
   stack1 = stack2.call(depth0, stack1, tmp1);
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += " />Use recursive data parsing\n		<input type=\"radio\" name=\"isRecursive\" value=\"false\"";
+  buffer += " />\n			Use recursive data parsing\n		</label>\n		<label>\n			<input type=\"radio\" name=\"isRecursive\" value=\"false\"";
   foundHelper = helpers.isRecursive;
   stack1 = foundHelper || depth0.isRecursive;
   stack2 = helpers.unless;
@@ -645,7 +647,7 @@ function program3(depth0,data) {
   tmp1.inverse = self.noop;
   stack1 = stack2.call(depth0, stack1, tmp1);
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += " />Use iterative data parsing\n	</div>\n</header>\n<ul class=\"tree-container\"></ul>\n";
+  buffer += " />\n			Use iterative data parsing\n		</label>\n		<button class=\"reset\">Load default data</button>\n	</div>\n</header>\n<ul class=\"tree-container\"></ul>\n";
   return buffer;});
 });
 

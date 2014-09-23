@@ -1,9 +1,15 @@
 <header>
 	<h1>Tree</h1>
 	<div class="settings">
+		<label>
+			<input type="radio" name="isRecursive" value="true"{{#if isRecursive }} checked{{/if}} />
+			Use recursive data parsing
+		</label>
+		<label>
+			<input type="radio" name="isRecursive" value="false"{{#unless isRecursive }} checked{{/unless}} />
+			Use iterative data parsing
+		</label>
 		<button class="reset">Load default data</button>
-		<input type="radio" name="isRecursive" value="true"{{#if isRecursive }} checked{{/if}} />Use recursive data parsing
-		<input type="radio" name="isRecursive" value="false"{{#unless isRecursive }} checked{{/unless}} />Use iterative data parsing
 	</div>
 </header>
 <ul class="tree-container"></ul>

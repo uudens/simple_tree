@@ -43,7 +43,7 @@ module.exports = class SectionView extends Marionette.ItemView
   _loadTree: ->
     @_tree = new Tree
     @listenTo @_tree, 'sync', @render
-    @_tree.fetch()
+    @_tree.fetch error: @_reset
 
   _saveTree: ->
     @_tree.save() if @_tree

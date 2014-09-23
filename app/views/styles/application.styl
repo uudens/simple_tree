@@ -3,28 +3,63 @@
 *
   box-sizing: border-box
 
+html
+  font-size: 62.5%
+
+body
+  font-size: 1.8rem
+  background-color: darken(hsl(50, 50, 70), 5)
+
 h1
   margin: 0
-  padding: 2rem
+  padding: 4rem
+  display: inline-block;
 
 header
-  background-color: darken(hsl(50, 50, 50), 10)
   position: relative
 
   .settings
-    position: absolute
-    right: 0
-    top: 42%
+    float: right;
+    display: inline-block;
+    padding: 2rem;
+    vertical-align: middle;
+
+    > *
+      display: block;
+      margin-bottom: 0.9rem;
 
 ul, li
   list-style-type: none
   margin: 0
 
-.itemHead > *
-  display: inline-block
+button
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  padding: .5rem 1rem;
+  color: #444;
+  color: rgba(0,0,0,.8);
+  border: 0.1rem solid #999;
+  border: 0 rgba(0,0,0,0);
+  background-color: #E6E6E6;
+  text-decoration: none;
+  border-radius: 0.2rem;
+  transition: background-color 200ms
+
+  &:hover
+    background-color: darken(#E6E6E6, 5)
+
+.itemHead
+  padding-left: 1rem
+
+  > *
+    display: inline-block
 
 .tree-container
+  display: inline-block
+  white-space: nowrap
   padding-left: 0
+  min-width: 100%
 
   // Root node
   > li
@@ -45,4 +80,4 @@ levelSelector(num)
 
 for level in (1..20)
   .tree-container > li {levelSelector(level)}
-    background-color: hsl(level * 20 + 30, 50, 50)
+    background-color: hsl(level * 20 + 30, 50, 70)
