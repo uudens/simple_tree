@@ -429,21 +429,95 @@ th {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-#home-view {
-  width: 480px;
-  margin: 0 auto;
-}
 h1 {
-  padding-left: 138px;
-  margin-bottom: 0.5em;
-  font-size: 5em;
-  color: #fff;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  background-color: #91a2c0;
-  background-image: url("http://brunch.io/images/brunch.png");
-  background-repeat: no-repeat;
-  background-position: 2px;
+  margin: 0;
+  padding: 2rem;
+}
+header {
+  background-color: #857a47;
+  position: relative;
+}
+header .settings {
+  position: absolute;
+  right: 0;
+  top: 42%;
+}
+ul,
+li {
+  list-style-type: none;
+  margin: 0;
+}
+.itemHead > * {
+  display: inline-block;
+}
+.tree-container {
+  padding-left: 0;
+}
+.tree-container > li > .children {
+  padding-left: 0;
+}
+.tree-container > li > .itemHead {
+  display: none;
+}
+.tree-container > li > ul > li {
+  background-color: #bfaa40;
+}
+.tree-container > li > ul > li > ul > li {
+  background-color: #aabf40;
+}
+.tree-container > li > ul > li > ul > li > ul > li {
+  background-color: #80bf40;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #55bf40;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #40bf55;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #40bf80;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #40bfaa;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #40aabf;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #407fbf;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #4055bf;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #5540bf;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #7f40bf;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #aa40bf;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #bf40aa;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #bf4080;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #bf4055;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #bf5540;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #bf8040;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #bfaa40;
+}
+.tree-container > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li > ul > li {
+  background-color: #aabf40;
 }
 
 

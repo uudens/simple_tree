@@ -1,23 +1,48 @@
-// nib is a powerful lib for stylus that provides cross-browser css3 mixins.
-// No more vendor prefixes. http://visionmedia.github.com/nib/
 @import 'nib'
 
-// Apply a natural box layout model to all elements.
-// http://paulirish.com/2012/box-sizing-border-box-ftw/
 *
   box-sizing: border-box
 
-#home-view
-  width: 480px
-  margin: 0 auto
-
 h1
-  padding-left: 138px
-  margin-bottom: 0.5em
-  font-size: 5em
-  color: #fff
-  border-radius: 5px
-  background-color: #91a2c0
-  background-image: url('http://brunch.io/images/brunch.png')
-  background-repeat: no-repeat
-  background-position: 2px
+  margin: 0
+  padding: 2rem
+
+header
+  background-color: darken(hsl(50, 30, 50), 10)
+  position: relative
+
+  .settings
+    position: absolute
+    right: 0
+    top: 42%
+
+ul, li
+  list-style-type: none
+  margin: 0
+
+.itemHead > *
+  display: inline-block
+
+.tree-container
+  padding-left: 0
+
+  // Root node
+  > li
+    > .children
+      padding-left: 0
+
+    > .itemHead
+      display: none
+
+
+
+// Render colors for various tree levels
+
+levelSelector(num)
+  sel = ''
+  for n in (1..num)
+    sel += '> ul > li '
+
+for level in (1..20)
+  .tree-container > li {levelSelector(level)}
+    background-color: hsl(level * 20 + 30, 50, 50)

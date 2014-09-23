@@ -439,7 +439,7 @@ function program1(depth0,data) {
   
   return " checked";}
 
-  buffer += "<h1>Tree</h1>\n<button class=\"reset\">Load default data</button>\n<input type=\"checkbox\" class=\"isRecursive\"";
+  buffer += "<header>\n	<h1>Tree</h1>\n	<div class=\"settings\">\n		<button class=\"reset\">Load default data</button>\n		<input type=\"checkbox\" class=\"isRecursive\"";
   foundHelper = helpers.isRecursive;
   stack1 = foundHelper || depth0.isRecursive;
   stack2 = helpers['if'];
@@ -449,7 +449,7 @@ function program1(depth0,data) {
   tmp1.inverse = self.noop;
   stack1 = stack2.call(depth0, stack1, tmp1);
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += ">Use recursive data parsing</button>\n<div class=\"tree-container\"></div>\n";
+  buffer += ">Use recursive data parsing</button>\n	</div>\n</header>\n<ul class=\"tree-container\"></ul>\n";
   return buffer;});
 });
 
@@ -459,12 +459,12 @@ module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partial
   var buffer = "", stack1, foundHelper, self=this, functionType="function", helperMissing=helpers.helperMissing, undef=void 0, escapeExpression=this.escapeExpression;
 
 
-  buffer += "<button class=\"delete\">Delete</button>\n<button class=\"add\">Add</button>\n<p class=\"label\">";
+  buffer += "<div class=\"itemHead\">\n	<button class=\"delete\">Delete</button>\n	<button class=\"add\">Add</button>\n	<p class=\"label\">";
   foundHelper = helpers.label;
   stack1 = foundHelper || depth0.label;
   if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
   else if(stack1=== undef) { stack1 = helperMissing.call(depth0, "label", { hash: {} }); }
-  buffer += escapeExpression(stack1) + "</p>\n<ul class=\"children\"></ul>\n";
+  buffer += escapeExpression(stack1) + "</p>\n</div>\n<ul class=\"children\"></ul>\n";
   return buffer;});
 });
 
