@@ -586,10 +586,16 @@ module.exports = SectionView = (function(_super) {
   };
 
   SectionView.prototype._loadTree = function() {
+    var _this = this;
     this._tree = new Tree;
     this.listenTo(this._tree, 'sync', this.render);
     return this._tree.fetch({
-      error: this._reset
+      error: this._reset,
+      success: function() {
+        if (_this._tree.get('children').isEmpty()) {
+          return _this._reset();
+        }
+      }
     });
   };
 
