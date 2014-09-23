@@ -1,5 +1,6 @@
 template = require './templates/tree_node_view'
 TreeNode = require '../entities/tree_node'
+Trees = require '../lib/trees'
 
 module.exports = class TreeNodeView extends Marionette.CompositeView
 
@@ -59,7 +60,7 @@ module.exports = class TreeNodeView extends Marionette.CompositeView
     e.stopPropagation()
 
     @collection.add new TreeNode
-      label: 'New child'
+      label: Trees.getRandom()
 
     @_trigger 'node_added'
 

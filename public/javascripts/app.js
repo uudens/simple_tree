@@ -331,6 +331,21 @@ module.exports = Router = (function(_super) {
 
 });
 
+;require.register("lib/trees", function(exports, require, module) {
+var Trees;
+
+module.exports = Trees = {
+  getRandom: function() {
+    return this._capitalize(_.sample(this._trees));
+  },
+  _capitalize: function(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  },
+  _trees: ['almond', 'apple', 'apricot', 'ash', 'aspen', 'baobob', 'banyan', 'bark', 'beech', 'black ash', 'black willow', 'bigtooth aspen', 'birch', 'bodhi', 'bristlecone pine', 'buckeye', 'butternut', 'cabbage palmetto', 'camellia', 'catalpa', 'cedar', 'cherry', 'chestnut', 'choke cherry', 'coconut palm', 'cone', 'cottonwood', 'crape myrtle', 'crabapple', 'cypress', 'date', 'dogwood', 'Douglas fir', 'elderberry', 'elm', 'eucalyptus', 'evergreen', 'fig', 'filbert', 'fir', 'flame tree', 'forest', 'ginkgo', 'goldenlarch', 'grapefruit', 'grove', 'gum', 'hackberry', 'haw', 'hawthorn', 'hemlock', 'hickory', 'holly', 'honeylocust', 'ipil', 'ironwood', 'jack pine', 'jacktree', 'Japanese maple', 'jujuba', 'jungle', 'juniper', 'kapok tree', 'katsura', 'kukui nut', 'kumquat', 'larch', 'lilac', 'linden', 'live oak', 'loblolly pine', 'locust', 'loquat', 'lone pine', 'longleaf pine', 'magnolia', 'mahogany', 'mangrove', 'maple', 'mimosa', 'mountainash', 'nectarine', 'northern red oak', 'Norway maple', 'oak', 'olive', 'orange', 'paper birch', 'palm', 'palmetto', 'pawpaw', 'peach', 'pear', 'pecan', 'persimmon', 'pine', 'piñon pine', 'plum', 'poplar', 'quaking aspen', 'quince', 'rain forest', 'redbud', 'redwood', 'rings', 'rubber tree', 'sassafras', 'Scotch pine', 'sequoia', 'serviceberry', 'silver maple', 'Sitka spruce', 'slippery elm', 'spruce', 'sugar maple', 'sweetgum', 'sycamore', 'teak', 'tree', 'tulip-tree', 'tupelo', 'upright red maple', 'viburnum', 'walnut', 'weeping willow', 'white ash', 'white oak', 'white pine', 'willow', 'wingnut', 'witchhazel', 'yellowwood', 'yew', 'zebrawood', 'zelkova']
+};
+
+});
+
 ;require.register("lib/view_helper", function(exports, require, module) {
 
 
@@ -484,13 +499,15 @@ module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partial
 });
 
 ;require.register("views/tree_node_view", function(exports, require, module) {
-var TreeNode, TreeNodeView, template,
+var TreeNode, TreeNodeView, Trees, template,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
 template = require('./templates/tree_node_view');
 
 TreeNode = require('../entities/tree_node');
+
+Trees = require('../lib/trees');
 
 module.exports = TreeNodeView = (function(_super) {
 
@@ -562,7 +579,7 @@ module.exports = TreeNodeView = (function(_super) {
   TreeNodeView.prototype._onAddClick = function(e) {
     e.stopPropagation();
     this.collection.add(new TreeNode({
-      label: 'New child'
+      label: Trees.getRandom()
     }));
     return this._trigger('node_added');
   };
