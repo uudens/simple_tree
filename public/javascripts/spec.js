@@ -95,9 +95,31 @@ var TreeNode;
 
 TreeNode = require('../entities/tree_node');
 
-describe("someTest", function() {
-  return it('should be true', function() {
-    return expect(true).toBe(true);
+describe("TreeNode", function() {
+  it('should generate id if not provided', function() {
+    var node;
+    node = new TreeNode;
+    return expect(node.id).toBeTruthy();
+  });
+  it('should not overwrite id if it\'s provided', function() {
+    var node;
+    node = new TreeNode({
+      id: 1
+    });
+    return expect(node.id).toBe(1);
+  });
+  it('should have children collection even if not provided', function() {
+    var node;
+    node = new TreeNode;
+    return expect(node.get('children') instanceof Backbone.Collection).toBe(true);
+  });
+  return it('should not overwrite children collection if it\'s provided', function() {
+    var children, node;
+    children = new Backbone.Collection;
+    node = new TreeNode({
+      children: children
+    });
+    return expect(node.get('children')).toBe(children);
   });
 });
 
