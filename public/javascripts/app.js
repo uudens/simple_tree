@@ -352,6 +352,19 @@ module.exports = Trees = {
 
 });
 
+;require.register("spec/tree_node", function(exports, require, module) {
+var TreeNode;
+
+TreeNode = require('../entities/tree_node');
+
+describe("someTest", function() {
+  return it('should be true', function() {
+    return expect(true).toBe(true);
+  });
+});
+
+});
+
 ;require.register("views/section_view", function(exports, require, module) {
 var EventHub, SectionView, Tree, TreeNodeView, template,
   __hasProp = {}.hasOwnProperty,

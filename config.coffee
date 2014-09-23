@@ -6,6 +6,7 @@ exports.config =
       joinTo:
         'javascripts/app.js': /^app/
         'javascripts/vendor.js': /^(vendor)|(bower_components)/
+        'javascripts/spec.js': /spec/
       order:
         before: []
 
