@@ -12,6 +12,7 @@ All files for deployment on a webserver are in ```public``` folder.
 
 ```
 npm install -g brunch
+npm install
 bower install
 npm start
 ```

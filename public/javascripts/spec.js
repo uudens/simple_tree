@@ -225,7 +225,7 @@ describe("Tree", function() {
 
 });
 
-;require.register("spec/tree_node", function(exports, require, module) {
+require.register("spec/tree_node", function(exports, require, module) {
 var TreeNode;
 
 TreeNode = require('../entities/tree_node');
@@ -262,5 +262,5 @@ describe("TreeNode", function() {
 
 });
 
-;
+
 //# sourceMappingURL=spec.js.map

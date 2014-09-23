@@ -59,8 +59,10 @@ module.exports = class TreeNodeView extends Marionette.CompositeView
   _onAddClick: (e) ->
     e.stopPropagation()
 
-    @collection.add new TreeNode
+    newNode = new TreeNode
       label: Trees.getRandom()
+
+    @collection.add newNode, at: 0 # Insert at beginning
 
     @_trigger 'node_added'
 

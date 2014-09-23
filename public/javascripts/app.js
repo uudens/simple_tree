@@ -117,7 +117,7 @@ module.exports = Application = (function() {
 
 });
 
-;require.register("entities/tree", function(exports, require, module) {
+require.register("entities/tree", function(exports, require, module) {
 var Tree, TreeNode, TreeNodes,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -226,7 +226,7 @@ module.exports = Tree = (function(_super) {
 
 });
 
-;require.register("entities/tree_node", function(exports, require, module) {
+require.register("entities/tree_node", function(exports, require, module) {
 var TreeNode, TreeNodes,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -264,7 +264,7 @@ module.exports = TreeNode = (function(_super) {
 
 });
 
-;require.register("entities/tree_nodes", function(exports, require, module) {
+require.register("entities/tree_nodes", function(exports, require, module) {
 var TreeNodes,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -283,7 +283,7 @@ module.exports = TreeNodes = (function(_super) {
 
 });
 
-;require.register("initialize", function(exports, require, module) {
+require.register("initialize", function(exports, require, module) {
 var Application;
 
 Application = require('application');
@@ -295,7 +295,7 @@ $(function() {
 
 });
 
-;require.register("lib/event_hub", function(exports, require, module) {
+require.register("lib/event_hub", function(exports, require, module) {
 var EventHub;
 
 EventHub = {};
@@ -306,7 +306,7 @@ module.exports = EventHub;
 
 });
 
-;require.register("lib/router", function(exports, require, module) {
+require.register("lib/router", function(exports, require, module) {
 var Router, application,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -331,7 +331,7 @@ module.exports = Router = (function(_super) {
 
 });
 
-;require.register("lib/trees", function(exports, require, module) {
+require.register("lib/trees", function(exports, require, module) {
 var Trees;
 
 module.exports = Trees = {
@@ -346,7 +346,7 @@ module.exports = Trees = {
 
 });
 
-;require.register("spec/tree", function(exports, require, module) {
+require.register("spec/tree", function(exports, require, module) {
 var Tree;
 
 Tree = require('../entities/tree');
@@ -481,7 +481,7 @@ describe("Tree", function() {
 
 });
 
-;require.register("spec/tree_node", function(exports, require, module) {
+require.register("spec/tree_node", function(exports, require, module) {
 var TreeNode;
 
 TreeNode = require('../entities/tree_node');
@@ -518,7 +518,7 @@ describe("TreeNode", function() {
 
 });
 
-;require.register("views/section_view", function(exports, require, module) {
+require.register("views/section_view", function(exports, require, module) {
 var EventHub, SectionView, Tree, TreeNodeView, template,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -612,7 +612,7 @@ module.exports = SectionView = (function(_super) {
 
 });
 
-;require.register("views/templates/section_view", function(exports, require, module) {
+require.register("views/templates/section_view", function(exports, require, module) {
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   helpers = helpers || Handlebars.helpers;
   var buffer = "", stack1, stack2, foundHelper, tmp1, self=this;
@@ -651,13 +651,13 @@ function program3(depth0,data) {
   return buffer;});
 });
 
-;require.register("views/templates/tree_node_view", function(exports, require, module) {
+require.register("views/templates/tree_node_view", function(exports, require, module) {
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   helpers = helpers || Handlebars.helpers;
   var buffer = "", stack1, foundHelper, self=this, functionType="function", helperMissing=helpers.helperMissing, undef=void 0, escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"itemHead\">\n	<button class=\"delete\">Delete</button>\n	<button class=\"add\">Add</button>\n	<p class=\"label\">";
+  buffer += "<div class=\"itemHead\">\n	<button class=\"delete\" title=\"Delete this item with all it's children\">Delete</button>\n	<button class=\"add\" title=\"Add new child to this item\">Add</button>\n	<p class=\"label\" title=\"Double click to edit label\">";
   foundHelper = helpers.label;
   stack1 = foundHelper || depth0.label;
   if(typeof stack1 === functionType) { stack1 = stack1.call(depth0, { hash: {} }); }
@@ -666,7 +666,7 @@ module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partial
   return buffer;});
 });
 
-;require.register("views/tree_node_view", function(exports, require, module) {
+require.register("views/tree_node_view", function(exports, require, module) {
 var TreeNode, TreeNodeView, Trees, template,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -745,10 +745,14 @@ module.exports = TreeNodeView = (function(_super) {
   };
 
   TreeNodeView.prototype._onAddClick = function(e) {
+    var newNode;
     e.stopPropagation();
-    this.collection.add(new TreeNode({
+    newNode = new TreeNode({
       label: Trees.getRandom()
-    }));
+    });
+    this.collection.add(newNode, {
+      at: 0
+    });
     return this._trigger('node_added');
   };
 
@@ -780,5 +784,5 @@ module.exports = TreeNodeView = (function(_super) {
 
 });
 
-;
+
 //# sourceMappingURL=app.js.map
