@@ -1,7 +1,7 @@
 {
-  "author": "Your Name",
-  "name": "package-name",
-  "description": "Package description",
+  "author": "Karlis Bikis",
+  "name": "tree",
+  "description": "Simple tree",
   "version": "0.0.1",
   "homepage": "",
   "repository": {
@@ -12,21 +12,15 @@
     "node": "~0.6.10 || 0.8 || 0.9"
   },
   "scripts": {
-    "start": "brunch watch --server",
-    "test": "brunch test"
+    "start": "brunch watch --server"
   },
   "dependencies": {
     "clean-css-brunch": ">= 1.0 < 1.4",
     "coffee-script-brunch": ">= 1.0 < 1.4",
     "css-brunch": ">= 1.0 < 1.4",
     "handlebars-brunch": ">= 1.0 < 1.4",
-    "jasmine-node": "^1.14.5",
     "javascript-brunch": ">= 1.0 < 1.4",
     "stylus-brunch": ">= 1.0 < 1.4",
     "uglify-js-brunch": ">= 1.0 < 1.4"
-  },
-  "devDependencies": {
-    "mocha": "1.3.0",
-    "expect.js": "0.1.2"
   }
 }

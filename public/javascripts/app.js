@@ -346,12 +346,6 @@ module.exports = Trees = {
 
 });
 
-;require.register("lib/view_helper", function(exports, require, module) {
-
-
-
-});
-
 ;require.register("spec/tree", function(exports, require, module) {
 var Tree;
 
@@ -781,41 +775,6 @@ module.exports = TreeNodeView = (function(_super) {
   return TreeNodeView;
 
 })(Marionette.CompositeView);
-
-});
-
-;require.register("views/view", function(exports, require, module) {
-var View,
-  __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-  __hasProp = {}.hasOwnProperty,
-  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-require('lib/view_helper');
-
-module.exports = View = (function(_super) {
-
-  __extends(View, _super);
-
-  function View() {
-    this.render = __bind(this.render, this);
-    return View.__super__.constructor.apply(this, arguments);
-  }
-
-  View.prototype.template = function() {};
-
-  View.prototype.getRenderData = function() {};
-
-  View.prototype.render = function() {
-    this.$el.html(this.template(this.getRenderData()));
-    this.afterRender();
-    return this;
-  };
-
-  View.prototype.afterRender = function() {};
-
-  return View;
-
-})(Backbone.View);
 
 });
 
