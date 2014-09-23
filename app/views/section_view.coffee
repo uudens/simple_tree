@@ -9,11 +9,11 @@ module.exports = class SectionView extends Marionette.ItemView
   template: template
   events:
     'click .reset': '_reset'
-    'change .isRecursive': '_onParseMethodChange'
+    'change input[name="isRecursive"]': '_onParseMethodChange'
 
   ui:
     treeContainer: '.tree-container'
-    recursiveBox: '.isRecursive'
+    recursiveBox: 'input[name="isRecursive"]'
 
   _tree: null
 
@@ -49,5 +49,5 @@ module.exports = class SectionView extends Marionette.ItemView
     @_tree.save() if @_tree
 
   _onParseMethodChange: ->
-    @_tree.set isRecursive: @ui.recursiveBox.is ':checked'
+    @_tree.set isRecursive: @ui.recursiveBox.filter(':checked').val() is 'true'
     @_saveTree()

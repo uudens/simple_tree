@@ -364,12 +364,12 @@ module.exports = SectionView = (function(_super) {
 
   SectionView.prototype.events = {
     'click .reset': '_reset',
-    'change .isRecursive': '_onParseMethodChange'
+    'change input[name="isRecursive"]': '_onParseMethodChange'
   };
 
   SectionView.prototype.ui = {
     treeContainer: '.tree-container',
-    recursiveBox: '.isRecursive'
+    recursiveBox: 'input[name="isRecursive"]'
   };
 
   SectionView.prototype._tree = null;
@@ -418,7 +418,7 @@ module.exports = SectionView = (function(_super) {
 
   SectionView.prototype._onParseMethodChange = function() {
     this._tree.set({
-      isRecursive: this.ui.recursiveBox.is(':checked')
+      isRecursive: this.ui.recursiveBox.filter(':checked').val() === 'true'
     });
     return this._saveTree();
   };
@@ -439,7 +439,12 @@ function program1(depth0,data) {
   
   return " checked";}
 
-  buffer += "<header>\n	<h1>Tree</h1>\n	<div class=\"settings\">\n		<button class=\"reset\">Load default data</button>\n		<input type=\"checkbox\" class=\"isRecursive\"";
+function program3(depth0,data) {
+  
+  
+  return " checked";}
+
+  buffer += "<header>\n	<h1>Tree</h1>\n	<div class=\"settings\">\n		<button class=\"reset\">Load default data</button>\n		<input type=\"radio\" name=\"isRecursive\" value=\"true\"";
   foundHelper = helpers.isRecursive;
   stack1 = foundHelper || depth0.isRecursive;
   stack2 = helpers['if'];
@@ -449,7 +454,17 @@ function program1(depth0,data) {
   tmp1.inverse = self.noop;
   stack1 = stack2.call(depth0, stack1, tmp1);
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += ">Use recursive data parsing</button>\n	</div>\n</header>\n<ul class=\"tree-container\"></ul>\n";
+  buffer += " />Use recursive data parsing\n		<input type=\"radio\" name=\"isRecursive\" value=\"false\"";
+  foundHelper = helpers.isRecursive;
+  stack1 = foundHelper || depth0.isRecursive;
+  stack2 = helpers.unless;
+  tmp1 = self.program(3, program3, data);
+  tmp1.hash = {};
+  tmp1.fn = tmp1;
+  tmp1.inverse = self.noop;
+  stack1 = stack2.call(depth0, stack1, tmp1);
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += " />Use iterative data parsing\n	</div>\n</header>\n<ul class=\"tree-container\"></ul>\n";
   return buffer;});
 });
 

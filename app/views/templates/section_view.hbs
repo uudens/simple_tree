@@ -2,7 +2,8 @@
 	<h1>Tree</h1>
 	<div class="settings">
 		<button class="reset">Load default data</button>
-		<input type="checkbox" class="isRecursive"{{#if isRecursive }} checked{{/if}}>Use recursive data parsing</button>
+		<input type="radio" name="isRecursive" value="true"{{#if isRecursive }} checked{{/if}} />Use recursive data parsing
+		<input type="radio" name="isRecursive" value="false"{{#unless isRecursive }} checked{{/unless}} />Use iterative data parsing
 	</div>
 </header>
 <ul class="tree-container"></ul>
