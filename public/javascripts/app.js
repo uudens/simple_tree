@@ -145,10 +145,10 @@ module.exports = Tree = (function(_super) {
     data.isRecursive = this.get('isRecursive') != null ? this.get('isRecursive') : data.isRecursive;
     if (data.isRecursive) {
       console.debug('Parsing data using Recursive method');
-      data.children = this._getChildCollectionRecursively(data.children);
+      data.children = this.getChildCollectionRecursively(data.children);
     } else {
       console.debug('Parsing data using Iterative method');
-      data.children = this._getChildCollectionIteratively(data.children);
+      data.children = this.getChildCollectionIteratively(data.children);
     }
     return data;
   };
@@ -161,7 +161,7 @@ module.exports = Tree = (function(_super) {
     });
   };
 
-  Tree.prototype._getChildCollectionRecursively = function(data) {
+  Tree.prototype.getChildCollectionRecursively = function(data) {
     var childData, collection, hasChildren, model, _i, _len;
     collection = new TreeNodes;
     for (_i = 0, _len = data.length; _i < _len; _i++) {
@@ -170,7 +170,7 @@ module.exports = Tree = (function(_super) {
       hasChildren = childData.children && childData.children.length;
       if (hasChildren) {
         model.set({
-          children: this._getChildCollectionRecursively(childData.children)
+          children: this.getChildCollectionRecursively(childData.children)
         });
       }
       collection.add(model);
@@ -178,7 +178,7 @@ module.exports = Tree = (function(_super) {
     return collection;
   };
 
-  Tree.prototype._getChildCollectionIteratively = function(data) {
+  Tree.prototype.getChildCollectionIteratively = function(data) {
     var childData, collection, i, index, indexes, model, parentCollections, _i, _len;
     collection = new TreeNodes;
     parentCollections = [collection];
@@ -352,36 +352,173 @@ module.exports = Trees = {
 
 });
 
+;require.register("spec/tree", function(exports, require, module) {
+var Tree;
+
+Tree = require('../entities/tree');
+
+describe("Tree", function() {
+  beforeEach(function() {
+    return this._data = {
+      isRecursive: true,
+      children: [
+        {
+          label: 'topLevel1'
+        }, {
+          label: 'topLevel2',
+          children: [
+            {
+              label: '2ndLevel1'
+            }
+          ]
+        }
+      ]
+    };
+  });
+  describe('#parse', function() {
+    describe('when isRecursive: true', function() {
+      it('should call #getChildCollectionRecursively', function() {
+        var tree;
+        tree = new Tree;
+        spyOn(tree, 'getChildCollectionRecursively');
+        tree.set(tree.parse(this._data));
+        return expect(tree.getChildCollectionRecursively).toHaveBeenCalled();
+      });
+      return it('should not call #getChildCollectionIteratively', function() {
+        var tree;
+        tree = new Tree;
+        spyOn(tree, 'getChildCollectionIteratively');
+        tree.set(tree.parse(this._data));
+        return expect(tree.getChildCollectionIteratively).not.toHaveBeenCalled();
+      });
+    });
+    return describe('when isRecursive: false', function() {
+      beforeEach(function() {
+        return this._data.isRecursive = false;
+      });
+      it('should not call #getChildCollectionRecursively', function() {
+        var tree;
+        tree = new Tree;
+        spyOn(tree, 'getChildCollectionRecursively');
+        tree.set(tree.parse(this._data));
+        return expect(tree.getChildCollectionRecursively).not.toHaveBeenCalled();
+      });
+      return it('should call #getChildCollectionIteratively', function() {
+        var tree;
+        tree = new Tree;
+        spyOn(tree, 'getChildCollectionIteratively');
+        tree.set(tree.parse(this._data));
+        return expect(tree.getChildCollectionIteratively).toHaveBeenCalled();
+      });
+    });
+  });
+  describe('#getChildCollectionRecursively', function() {
+    it('should be recursive (call itself)', function() {
+      var collection, tree;
+      tree = new Tree;
+      spyOn(tree, 'getChildCollectionRecursively').and.callThrough();
+      collection = tree.getChildCollectionRecursively(this._data.children);
+      return expect(tree.getChildCollectionRecursively.calls.count()).toBeGreaterThan(1);
+    });
+    it('should generate nested child collections and models', function() {
+      var collection, tree;
+      tree = new Tree;
+      collection = tree.getChildCollectionRecursively(this._data.children);
+      expect(collection instanceof Backbone.Collection).toBe(true);
+      expect(collection.at(1) instanceof Backbone.Model).toBe(true);
+      return expect(collection.at(1).get('children') instanceof Backbone.Collection).toBe(true);
+    });
+    return it('should populate models with data from JSON', function() {
+      var collection, tree;
+      tree = new Tree;
+      collection = tree.getChildCollectionRecursively(this._data.children);
+      expect(collection.at(0).get('label')).toBe('topLevel1');
+      expect(collection.at(1).get('label')).toBe('topLevel2');
+      return expect(collection.at(1).get('children').at(0).get('label')).toBe('2ndLevel1');
+    });
+  });
+  describe('#getChildCollectionIteratively', function() {
+    it('should not be recursive (not call itself)', function() {
+      var collection, tree;
+      tree = new Tree;
+      spyOn(tree, 'getChildCollectionIteratively').and.callThrough();
+      collection = tree.getChildCollectionIteratively(this._data.children);
+      return expect(tree.getChildCollectionIteratively.calls.count()).toBe(1);
+    });
+    it('should generate nested child collections and models', function() {
+      var collection, tree;
+      tree = new Tree;
+      collection = tree.getChildCollectionIteratively(this._data.children);
+      expect(collection instanceof Backbone.Collection).toBe(true);
+      expect(collection.at(1) instanceof Backbone.Model).toBe(true);
+      return expect(collection.at(1).get('children') instanceof Backbone.Collection).toBe(true);
+    });
+    return it('should populate models with data from JSON', function() {
+      var collection, tree;
+      tree = new Tree;
+      collection = tree.getChildCollectionIteratively(this._data.children);
+      expect(collection.at(0).get('label')).toBe('topLevel1');
+      expect(collection.at(1).get('label')).toBe('topLevel2');
+      return expect(collection.at(1).get('children').at(0).get('label')).toBe('2ndLevel1');
+    });
+  });
+  return describe('#loadDefault', function() {
+    it('should GET data/tree', function() {
+      var ajaxArgs, tree;
+      tree = new Tree;
+      spyOn($, 'ajax');
+      tree.loadDefault();
+      ajaxArgs = _.first($.ajax.calls.argsFor(0));
+      expect(ajaxArgs.type).toBe('get');
+      return expect(ajaxArgs.url).toBe('data/tree');
+    });
+    return it('should parse result', function() {
+      var ajaxArgs, tree;
+      tree = new Tree;
+      spyOn($, 'ajax');
+      spyOn(tree, 'parse');
+      tree.loadDefault();
+      ajaxArgs = _.first($.ajax.calls.argsFor(0));
+      ajaxArgs.success(this._data);
+      return expect(tree.parse).toHaveBeenCalledWith(this._data);
+    });
+  });
+});
+
+});
+
 ;require.register("spec/tree_node", function(exports, require, module) {
 var TreeNode;
 
 TreeNode = require('../entities/tree_node');
 
 describe("TreeNode", function() {
-  it('should generate id if not provided', function() {
-    var node;
-    node = new TreeNode;
-    return expect(node.id).toBeTruthy();
-  });
-  it('should not overwrite id if it\'s provided', function() {
-    var node;
-    node = new TreeNode({
-      id: 1
+  return describe('#initialize', function() {
+    it('should generate id if not provided', function() {
+      var node;
+      node = new TreeNode;
+      return expect(node.id).toBeTruthy();
     });
-    return expect(node.id).toBe(1);
-  });
-  it('should have children collection even if not provided', function() {
-    var node;
-    node = new TreeNode;
-    return expect(node.get('children') instanceof Backbone.Collection).toBe(true);
-  });
-  return it('should not overwrite children collection if it\'s provided', function() {
-    var children, node;
-    children = new Backbone.Collection;
-    node = new TreeNode({
-      children: children
+    it('should not overwrite id if it\'s provided', function() {
+      var node;
+      node = new TreeNode({
+        id: 1
+      });
+      return expect(node.id).toBe(1);
     });
-    return expect(node.get('children')).toBe(children);
+    it('should have children collection even if not provided', function() {
+      var node;
+      node = new TreeNode;
+      return expect(node.get('children') instanceof Backbone.Collection).toBe(true);
+    });
+    return it('should not overwrite children collection if it\'s provided', function() {
+      var children, node;
+      children = new Backbone.Collection;
+      node = new TreeNode({
+        children: children
+      });
+      return expect(node.get('children')).toBe(children);
+    });
   });
 });
 

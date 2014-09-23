@@ -16,10 +16,10 @@ module.exports = class Tree extends Backbone.Model
 
     if data.isRecursive
       console.debug 'Parsing data using Recursive method'
-      data.children = @_getChildCollectionRecursively data.children
+      data.children = @getChildCollectionRecursively data.children
     else
       console.debug 'Parsing data using Iterative method'
-      data.children = @_getChildCollectionIteratively data.children
+      data.children = @getChildCollectionIteratively data.children
 
     data
 
@@ -29,17 +29,17 @@ module.exports = class Tree extends Backbone.Model
       @save()
 
   # Recursive
-  _getChildCollectionRecursively: (data) ->
+  getChildCollectionRecursively: (data) ->
     collection = new TreeNodes
     for childData in data
       model = new TreeNode _.omit childData, 'children'
       hasChildren = childData.children and childData.children.length
-      model.set children: @_getChildCollectionRecursively childData.children if hasChildren
+      model.set children: @getChildCollectionRecursively childData.children if hasChildren
       collection.add model
     collection
 
   # Iterative
-  _getChildCollectionIteratively: (data) ->
+  getChildCollectionIteratively: (data) ->
     collection = new TreeNodes
 
     parentCollections = [collection]
