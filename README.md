@@ -9,6 +9,8 @@ If on Chrome, make sure it's not a ```file://``` URL because it will probably bl
 
 All files for deployment on a webserver are in ```public``` folder.
 
+Online demo can be viewed at http://dev.uudens.lv/tree/
+
 ## Edit
 
 ```
